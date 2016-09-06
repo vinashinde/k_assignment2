@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="http://knockoutjs.com/downloads/knockout-3.4.0.js"></script>
+        <style>
+            th, tr, td {
+                border: 0.5px solid black;
+            }
+        </style>
+    </head>
+<body>
+    <table style="width:50%;">
+        <thead>
+            <tr><th>Emp ID</th><th>First name</th><th>Last name</th><th style="width:60px">Action</th></tr>
+        </thead>
+        <tbody data-bind="foreach: emp_array">
+        <tr>
+            <td data-bind="text: $data.id"></td>
+            <td data-bind="text: $data.firstname"></td>
+            <td data-bind="text: $data.lastname"></td>
+            <td><button data-bind="click: $parent.removeEmp" >Remove</button>
+          <button data-bind="click: $parent.displayEmp" >Display</button></td>
+        </tr>
+    </tbody>
+    </table>
+    
+   
+    
+   <input type="text" data-bind="visible:visibility , value: id1"/>
+    <input type="text" data-bind="visible:visibility , value: fname"/>
+    <input type="text" data-bind="visible:visibility , value: lname"/><br>
+    <button  data-bind="visible:visibility , click:edit">save</button>
+    
+   
+    <script>
+        function appviewmodel()
+        {
+            var self=this;
+            self.location=ko.observable();
+            self.newemp=ko.observable();
+            self.emp=ko.observable();
+            self.id1=ko.observable(" ");
+            self.fname=ko.observable(" ");
+            self.lname=ko.observable(" ");
+            self.visibility=ko.observable(false);
+           
+            self.emp_array=ko.observableArray([
+                { id:1,firstname:"xyz",lastname:"shinde" },
+                { id:2,firstname:"abc",lastname:"jadhav" },
+                { id:3,firstname:"lmn",lastname:"thakkar" }
+            ]);
+            
+            self.removeEmp = function(emp) {
+                self.emp_array.remove(emp);
+            }
+            
+            self.displayEmp = function(emp) {
+                self.visibility(true);
+                self.location(self.emp_array.indexOf(emp));
+                self.id1(emp.id);
+                self.fname(emp.firstname);
+                self.lname(emp.lastname);
+               
+                
+            }
+            
+            self.edit = function(){
+                self.emp_array.replace(self.emp_array()[self.location()], 
+                {
+                    id: self.id1(),firstname: self.fname(),lastname: self.lname()});
+            }
+        }
+        ko.applyBindings(new appviewmodel());
+    </script>
+</body>
+</html>                
+
